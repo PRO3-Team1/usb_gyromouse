@@ -110,7 +110,7 @@ ALIGNED(4) uint8_t USB_FsConfigDescriptor[] = {
 	0x01,							/* bConfigurationValue */
 	0x00,							/* iConfiguration */
 	USB_CONFIG_SELF_POWERED,		/* bmAttributes */
-	USB_CONFIG_POWER_MA(2),			/* bMaxPower */
+	USB_CONFIG_POWER_MA(10),			/* bMaxPower */
 
 	/* Interface 0, Alternate Setting 0, HID Class */
 	USB_INTERFACE_DESC_SIZE,		/* bLength */
@@ -151,7 +151,7 @@ const uint8_t USB_StringDescriptor[] = {
 	USB_STRING_DESCRIPTOR_TYPE,		/* bDescriptorType */
 	WBVAL(0x0409),					/* wLANGID : US English */
 	/* Index 0x01: Manufacturer */
-	(18 * 2 + 2),					/* bLength (18 Char + Type + lenght) */
+	(14 * 2 + 2),					/* bLength (14 Char + Type + lenght) */
 	USB_STRING_DESCRIPTOR_TYPE,		/* bDescriptorType */
 	'E', 0,
 	'D', 0,
@@ -167,12 +167,8 @@ const uint8_t USB_StringDescriptor[] = {
 	'M', 0,
 	' ', 0,
 	'1', 0,
-	' ', 0,
-	' ', 0,
-	' ', 0,
-	' ', 0,
 	/* Index 0x02: Product */
-	(13 * 2 + 2),					/* bLength (13 Char + Type + lenght) */
+	(15 * 2 + 2),					/* bLength (15 Char + Type + lenght) */
 	USB_STRING_DESCRIPTOR_TYPE,		/* bDescriptorType */
 	'I', 0,
 	'S', 0,
@@ -185,8 +181,10 @@ const uint8_t USB_StringDescriptor[] = {
 	's', 0,
 	'e', 0,
 	' ', 0,
-	' ', 0,
-	' ', 0,
+	'D', 0,
+	'e', 0,
+	'm', 0,
+	'o', 0,
 	/* Index 0x03: Serial Number */
 	(13 * 2 + 2),					/* bLength (13 Char + Type + lenght) */
 	USB_STRING_DESCRIPTOR_TYPE,		/* bDescriptorType */
@@ -204,12 +202,13 @@ const uint8_t USB_StringDescriptor[] = {
 	'8', 0,
 	'9', 0,
 	/* Index 0x04: Interface 0, Alternate Setting 0 */
-	(9 * 2 + 2),					/* bLength (9 Char + Type + lenght) */
+	(10 * 2 + 2),					/* bLength (10 Char + Type + lenght) */
 	USB_STRING_DESCRIPTOR_TYPE,		/* bDescriptorType */
 	'G', 0,
 	'y', 0,
 	'r', 0,
 	'o', 0,
+	' ', 0,
 	'M', 0,
 	'o', 0,
 	'u', 0,
