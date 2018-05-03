@@ -79,7 +79,7 @@ static void setLeftButtonMouseReport(uint8_t *rep, uint8_t state)
 }
 
 /* Routine to update mouse state report */
-static void Mouse_UpdateReport(void)
+static void Mouse_UpdateReport(float x, float y, float z)
 {
 	uint8_t joystick_status = Joystick_GetStatus();
 	CLEAR_HID_MOUSE_REPORT(&g_mouse.report[0]);
@@ -87,27 +87,8 @@ static void Mouse_UpdateReport(void)
 	if(Buttons_GetStatus()) {
 		setLeftButtonMouseReport(g_mouse.report, 1);
 	}
-	switch (joystick_status) {
-	case JOY_PRESS:
-		setLeftButtonMouseReport(g_mouse.report, 1);
-		break;
 
-	case JOY_LEFT:
-		setXYMouseReport(g_mouse.report, -4, 0);
-		break;
-
-	case JOY_RIGHT:
-		setXYMouseReport(g_mouse.report, 4, 0);
-		break;
-
-	case JOY_UP:
-		setXYMouseReport(g_mouse.report, 0, -4);
-		break;
-
-	case JOY_DOWN:
-		setXYMouseReport(g_mouse.report, 0, 4);
-		break;
-	}
+	setXYMouseReport(g_mouse.report, (int8_t)(x*10), (int8_t)(y*10));
 }
 
 /* HID Get Report Request Callback. Called automatically on HID Get Report Request */
@@ -116,7 +97,7 @@ static ErrorCode_t Mouse_GetReport(USBD_HANDLE_T hHid, USB_SETUP_PACKET *pSetup,
 	/* ReportID = SetupPacket.wValue.WB.L; */
 	switch (pSetup->wValue.WB.H) {
 	case HID_REPORT_INPUT:
-		Mouse_UpdateReport();
+		Mouse_UpdateReport(0,0,0);
 		*pBuffer = &g_mouse.report[0];
 		*plength = MOUSE_REPORT_SIZE;
 		break;
@@ -209,13 +190,13 @@ ErrorCode_t Mouse_Init(USBD_HANDLE_T hUsb,
 }
 
 /* Mouse tasks */
-void Mouse_Tasks(void)
+void Mouse_Tasks(float x, float y, float z)
 {
 	/* check device is configured before sending report. */
 	if ( USB_IsConfigured(g_mouse.hUsb)) {
 		if (g_mouse.tx_busy == 0) {
 			/* update report based on board state */
-			Mouse_UpdateReport();
+			Mouse_UpdateReport(x, y, z);
 			/* send report data */
 			g_mouse.tx_busy = 1;
 			USBD_API->hw->WriteEP(g_mouse.hUsb, HID_EP_IN, &g_mouse.report[0], MOUSE_REPORT_SIZE);

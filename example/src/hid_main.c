@@ -115,6 +115,7 @@ USB_INTERFACE_DESCRIPTOR *find_IntfDesc(const uint8_t *pDesc, uint32_t intfClass
 	return pIntfDesc;
 }
 
+
 /**
  * @brief	main routine for example
  * @return	Function should not exit.
@@ -167,9 +168,26 @@ int main(void)
 		}
 	}
 
+	Board_I2C_Init(0);
+	/* Initialize I2C */
+	Chip_I2C_Init(0);
+	Chip_I2C_SetClockRate(0, 10000);
+	NVIC_DisableIRQ(I2C0_IRQn);
+	Chip_I2C_SetMasterEventHandler(0, Chip_I2C_EventHandlerPolling);
+	/* Set default mode to interrupt */
+
+	static I2C_XFER_T xfer;
+
+	puts("Main loop");
 	while (1) {
+		char rg[6];
+		Chip_I2C_MasterCmdRead(0, 0x1E, 0x03, rg, 6);
+		float x = 1.0* ((rg[0]<<24) | (rg[1]<<16)) /256/256/1090;
+		float y = 1.0* ((rg[2]<<24) | (rg[3]<<16)) /256/256/1090;
+		float z = 1.0* ((rg[4]<<24) | (rg[5]<<16)) /256/256/1090;
+		//printf("Gauss X,Y,Z: %f,%f,%f\n", x, y, z);
 		/* Do Mouse tasks */
-		Mouse_Tasks();
+		Mouse_Tasks(x,y,z);
 		/* Sleep until next IRQ happens */
 		__WFI();
 	}

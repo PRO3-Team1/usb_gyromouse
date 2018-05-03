@@ -64,7 +64,7 @@ extern ErrorCode_t Mouse_Init(USBD_HANDLE_T hUsb,
  * @brief	Mouse tasks.
  * @return	On success returns LPC_OK.
  */
-extern void Mouse_Tasks(void);
+extern void Mouse_Tasks(float x, float y, float z);
 
 /**
  * @}
